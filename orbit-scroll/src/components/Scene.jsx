@@ -14,7 +14,7 @@ const RINGS = [
 ]
 // focused poster parks in front, left of the planet so both stay visible
 const FOCUS = new THREE.Vector3(-2.2, 0.1, 4.4)
-const DEFAULT_TINT = new THREE.Color('#2f8dff')
+const DEFAULT_TINT = new THREE.Color('#d9663a')
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v))
 
 /* ---------- textures + average colour (drives the planet tint) ---------- */
@@ -42,7 +42,7 @@ function useTextures(movies) {
             color = new THREE.Color(r / n / 255, g / n / 255, b / n / 255)
             const hsl = {}
             color.getHSL(hsl)
-            color.setHSL(hsl.h, Math.max(hsl.s, 0.7), clamp(hsl.l, 0.5, 0.62))
+            color.setHSL(hsl.h, clamp(hsl.s, 0.45, 0.75), clamp(hsl.l, 0.36, 0.5))
           } catch { /* keep default tint */ }
           if (!dead) setMap((prev) => ({ ...prev, [m.id]: { tex, color } }))
         },
@@ -73,7 +73,7 @@ const planetFrag = /* glsl */ `
     float band = sin(vPos.y * 5.0 + sin(vPos.x * 2.5 + uTime * 0.35) * 1.4 + sin(vPos.z * 3.0 - uTime * 0.25) + uTime * 0.2);
     float swirl = sin(vPos.x * 7.0 + vPos.z * 5.0 + uTime * 0.5) * 0.5 + 0.5;
     vec3 col = mix(uColor * 0.16, uColor * 0.95, 0.45 + 0.35 * band * swirl);
-    col += uColor * fres * 1.6;
+    col += uColor * fres * 1.15;
     gl_FragColor = vec4(col, 1.0);
     #include <colorspace_fragment>
   }
@@ -82,7 +82,7 @@ const glowFrag = /* glsl */ `
   uniform vec3 uColor; varying vec3 vNormal;
   void main() {
     float i = pow(0.15 - dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)), 3.5);
-    gl_FragColor = vec4(uColor * 1.7, clamp(i, 0.0, 1.0));
+    gl_FragColor = vec4(uColor * 1.1, clamp(i, 0.0, 0.55));
     #include <colorspace_fragment>
   }
 `
@@ -238,7 +238,7 @@ function Stars() {
   return (
     <points ref={ref}>
       <bufferGeometry><bufferAttribute attach="attributes-position" args={[pts, 3]} /></bufferGeometry>
-      <pointsMaterial size={0.09} color="#bcd4ff" transparent opacity={0.65} depthWrite={false} />
+      <pointsMaterial size={0.09} color="#e8dccb" transparent opacity={0.5} depthWrite={false} />
     </points>
   )
 }
