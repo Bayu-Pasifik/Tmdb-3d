@@ -1,0 +1,74 @@
+* { box-sizing: border-box; margin: 0; }
+html, body, #root { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #2b2350;
+  background: linear-gradient(120deg, #ffd1e8, #d4b8ff, #9fe3ff, #ffe9a8);
+  background-size: 300% 300%;
+  animation: drift 18s ease infinite;
+}
+@keyframes drift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.stage { position: fixed; inset: 0; }
+
+.ui {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+  gap: 12px; padding: 18px 28px;
+  pointer-events: none; /* let wheel/drag pass through to the canvas */
+}
+.ui > * { pointer-events: auto; }
+h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; }
+h1 span { color: #ff4fa3; }
+nav { display: flex; gap: 8px; flex-wrap: wrap; }
+nav button {
+  border: 0; padding: 8px 16px; border-radius: 999px; cursor: pointer;
+  background: rgba(255,255,255,.55); backdrop-filter: blur(8px);
+  color: #2b2350; font-weight: 600; transition: transform .2s, background .2s;
+}
+nav button:hover { transform: translateY(-2px); }
+nav button.active { background: #2b2350; color: #fff; }
+
+.status, .hint {
+  position: fixed; left: 50%; bottom: 44px; transform: translateX(-50%);
+  z-index: 10; padding: 8px 18px; border-radius: 999px; pointer-events: none;
+  background: rgba(255,255,255,.65); backdrop-filter: blur(8px); font-size: .9rem;
+}
+.status { top: 50%; bottom: auto; }
+.error { color: #c0173f; }
+
+.credit {
+  position: fixed; bottom: 10px; left: 0; right: 0; z-index: 10; text-align: center;
+  font-size: .7rem; opacity: .6; pointer-events: none;
+}
+
+.backdrop {
+  position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
+  background: rgba(255,255,255,.35); backdrop-filter: blur(10px);
+  animation: fade .25s ease;
+}
+.card {
+  display: flex; gap: 22px; max-width: 760px; width: calc(100% - 32px); padding: 22px;
+  background: rgba(255,255,255,.85); border-radius: 22px;
+  box-shadow: 0 20px 60px rgba(80,40,160,.25);
+}
+.card img { width: 200px; border-radius: 14px; align-self: flex-start; }
+.card h2 { margin-bottom: 6px; }
+.meta { opacity: .7; margin-bottom: 12px; }
+.card p { line-height: 1.5; }
+.card a { display: inline-block; margin: 14px 12px 0 0; color: #d6147d; font-weight: 600; }
+.card button {
+  margin-top: 14px; border: 0; padding: 8px 18px; border-radius: 999px;
+  background: #2b2350; color: #fff; cursor: pointer;
+}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 600px) {
+  .card { flex-direction: column; max-height: 90vh; overflow: auto; }
+  .card img { width: 140px; }
+}
